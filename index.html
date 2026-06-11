@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Black Cars - Lista de Spawn</title>
+  <style>
+    :root {
+      --bg: #07050c;
+      --bg-2: #12091f;
+      --card: rgba(22, 13, 35, 0.82);
+      --card-2: rgba(50, 26, 79, 0.72);
+      --purple: #9b35ff;
+      --purple-2: #d46bff;
+      --white: #f8f5ff;
+      --muted: #b7a9ca;
+      --line: rgba(170, 85, 255, 0.26);
+      --success: #35ffb2;
+      --shadow: 0 0 34px rgba(155, 53, 255, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top left, rgba(155, 53, 255, 0.28), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(212, 107, 255, 0.18), transparent 32%),
+        linear-gradient(135deg, #050308 0%, #0c0615 45%, #09050e 100%);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 60px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 34px;
+      background:
+        linear-gradient(135deg, rgba(20, 10, 32, 0.92), rgba(10, 6, 18, 0.86)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 90px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: -160px -80px auto auto;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(155, 53, 255, 0.42), transparent 68%);
+      filter: blur(2px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      width: 102px;
+      height: 102px;
+      object-fit: contain;
+      border-radius: 24px;
+      padding: 9px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      filter: drop-shadow(0 0 18px rgba(155, 53, 255, 0.48));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 0.95;
+      letter-spacing: -1.4px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 720px;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search {
+      flex: 1 1 340px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      color: var(--white);
+      outline: none;
+      padding: 16px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 0 18px;
+      border-radius: 16px;
+      color: var(--white);
+      background: linear-gradient(135deg, rgba(155,53,255,.32), rgba(255,255,255,.06));
+      border: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat( auto-fit, minmax(330px, 1fr) );
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, var(--card), rgba(10,6,18,0.88));
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(155,53,255,0.15), transparent 35%);
+      pointer-events: none;
+    }
+
+    .card-head {
+      padding: 22px 22px 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--purple-2);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .car-name {
+      margin: 0 0 12px;
+      min-height: 56px;
+      font-size: 21px;
+      line-height: 1.25;
+      letter-spacing: -0.4px;
+      text-transform: uppercase;
+    }
+
+    .spawn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.055);
+      border-radius: 15px;
+      padding: 12px 12px 12px 14px;
+    }
+
+    .spawn-code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      color: #fff;
+      overflow-wrap: anywhere;
+    }
+
+    .copy-btn {
+      border: 0;
+      cursor: pointer;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--purple), #5f16ad);
+      box-shadow: 0 0 16px rgba(155, 53, 255, 0.36);
+      transition: transform .2s ease, filter .2s ease;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover { transform: translateY(-1px); filter: brightness(1.12); }
+
+    .photos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 22px 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .photo-link {
+      min-height: 86px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.11);
+      background:
+        linear-gradient(135deg, rgba(155,53,255,0.18), rgba(255,255,255,0.04)),
+        #10091b;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 12px;
+      text-align: center;
+      padding: 8px;
+      position: relative;
+    }
+
+    .photo-link img {
+      width: 100%;
+      height: 100%;
+      min-height: 86px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .empty-photo {
+      border: 1px dashed rgba(212, 107, 255, 0.38);
+    }
+
+    .howto {
+      margin-top: 24px;
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .howto b { color: #fff; }
+    code {
+      color: #fff;
+      background: rgba(155,53,255,0.22);
+      border: 1px solid rgba(155,53,255,0.28);
+      border-radius: 8px;
+      padding: 2px 6px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 24px; }
+      .brand { align-items: flex-start; }
+      .logo { width: 74px; height: 74px; }
+      .photos { grid-template-columns: repeat(2, 1fr); }
+      .counter { min-height: 50px; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="brand">
+        <img class="logo" src="https://cdn.discordapp.com/attachments/1494091589453217832/1494091705417465947/e9ea918c-255f-4297-b0d6-5114ebe22334.png?ex=6a2bd595&is=6a2a8415&hm=79569d952ab52cc9ac64a0a226a41d48fd3a414d1393acf954d279e277e13f11&" alt="Logo Black Cars" />
+        <div>
+          <h1>Black Cars<br>Lista de Spawn</h1>
+          <p class="subtitle">Página premium para consultar nome, spawn e até fotos de cada veículo.</p>
+        </div>
+      </div>
+      <div class="tools">
+        <input id="searchInput" class="search" type="search" placeholder="Pesquisar por nome ou spawn..." />
+        <div id="counter" class="counter">0 veículos</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="logoUrlInput" class="search" type="url" placeholder="Colar link do logo (https://...)" />
+          <button id="applyLogoBtn" class="copy-btn" type="button">Aplicar logo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="carsGrid" class="grid"></section>
+
+    <section class="howto">
+      <b>Bem Vindo a Central de Spawn:</b> Aproveite Nosso Site: https://www.blackcarsfivem.com
+    </section>
+
+    <footer>Black Cars © Lista de Spawn</footer>
+  </main>
+
+  <script>
+    /* Logo via link: suporta query ?logo=URL ou input + botão */
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoImg = document.querySelector('.logo');
+      function applyLogoFromInput() {
+        const input = document.getElementById('logoUrlInput');
+        if (!input || !logoImg) return;
+        const url = input.value.trim();
+        if (url) logoImg.src = url;
+      }
+      const btn = document.getElementById('applyLogoBtn');
+      if (btn) btn.addEventListener('click', applyLogoFromInput);
+      // aplica automaticamente se houver ?logo=URL na query
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('logo');
+        if (q && logoImg) logoImg.src = q;
+      } catch (e) {}
+    });
+    // ===============================================================
+    // EDITE AQUI: cole os links das imagens do Discord em "photos".
+    // Cada carro possui 6 espaços. Exemplo:
+    // photos: ["https://cdn.discordapp.com/attachments/.../foto1.png", "https://.../foto2.png", ...]
+    // ===============================================================
+    const cars = [
+  {
+    "name": "BMW X5 KYLIAN MBAPPÉ",
+    "spawn": "BlackCars_BX5Mappe",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685097775992832/1.png?ex=6a2c43ec&is=6a2af26c&hm=20f766455bb6a1135406f7372d738466c5421f0b8710c6ec31a1bae002b2d578&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685098321248308/2.png?ex=6a2c43ec&is=6a2af26c&hm=18cf7aa631861952e0ca1144fc934b886f528589c5eb16bff217c8f0de0d06f0&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685098979496037/3.png?ex=6a2c43ed&is=6a2af26d&hm=b4efbec0d94db33e85014fba848e63ceb5d19471eec98246bface746ecaa1d73&=&format=webp&quality=lossless&width=1426&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685099730403401/4.png?ex=6a2c43ed&is=6a2af26d&hm=a1a84f646ecedcafe4205161824a046179ab26fe4e58bdc5f501fd979e3ec546&=&format=webp&quality=lossless&width=1335&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685100422332596/5.png?ex=6a2c43ed&is=6a2af26d&hm=4bdfb000c1047af6fed048a0da779291e2197ea20f1604ab74b951eaf5276c1b&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685101089230908/6.png?ex=6a2c43ed&is=6a2af26d&hm=95bf4fb47eac623afa5441ae64906ba5334f2a25dd3d1352fd7c12f9ea27713a&=&format=webp&quality=lossless&width=1294&height=856"
+    ]
+  },
+  {
+    "name": "BMW M7 LUKA MODRIC",
+    "spawn": "BlackCars_B7MLukaM",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685029291135097/1.png?ex=6a2c43dc&is=6a2af25c&hm=7719c61fd68d6b7882c8b66468b25e1b550dc4e12f621e974569e573694b0dfe&=&format=webp&quality=lossless&width=1321&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685029782130698/2.png?ex=6a2c43dc&is=6a2af25c&hm=7d63e22cd6318a14560b98a97baf8253726af0fd6aa75c6e39a63ccd892ec3d9&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685030247694387/3.png?ex=6a2c43dc&is=6a2af25c&hm=ade7c8524715bbe5f54e372b08301249f32d77f8623f29e6e96cf1105e7a2c3e&=&format=webp&quality=lossless&width=1403&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685030717198477/4.png?ex=6a2c43dc&is=6a2af25c&hm=e577327f13234f35c6596363efd7bbea824deff8e84fa482b703cdf08a56107d&=&format=webp&quality=lossless&width=1432&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685031136760079/5.png?ex=6a2c43dc&is=6a2af25c&hm=09e23a57352c48d1a5ed85aa7219ba90705e0e341d77afdedf04226fcd387d56&=&format=webp&quality=lossless&width=1271&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685031547666473/6.png?ex=6a2c43dd&is=6a2af25d&hm=01ad4f50ec82a742040ccab94f516b109921bd679f3b16457e904de9fda8da6b&=&format=webp&quality=lossless&width=1265&height=856"
+    ]
+  },
+  {
+    "name": "BMW X1 ESTADOS UNIDOS",
+    "spawn": "BlackCars_BX1EUA",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685072794714203/1.png?ex=6a2c43e6&is=6a2af266&hm=04196d914b87f5473695c57322f76016de5e2c1ab0c53cd017969407851cc6ed&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685073247703221/2.png?ex=6a2c43e6&is=6a2af266&hm=392cbf937cc4337e137c75c7e133a1395cf2413ac9256087b4f6fff5e3d53beb&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685073633575072/3.png?ex=6a2c43e7&is=6a2af267&hm=7747696134c94bc67fe12335e4fbdd44de4917f64e8ea677a2ed94271aa45899&=&format=webp&quality=lossless&width=1270&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685074069524713/4.png?ex=6a2c43e7&is=6a2af267&hm=53ccc28f2b96d649d51adfb7ff22eed1520ebf7919f9174e6697ca25c05bf6c3&=&format=webp&quality=lossless&width=1398&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685074531025118/5.png?ex=6a2c43e7&is=6a2af267&hm=844d7534d7fcd09dfdfe4f07d049b2b98b8168b6349ccab23440e9103774f509&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685074996723893/6.png?ex=6a2c43e7&is=6a2af267&hm=a2ed5ce803812689961e9bf9301a77c915cea68f1cc7a75b2dcd09ac2f91492a&=&format=webp&quality=lossless"
+    ]
+  },
+  {
+    "name": "BMW X6 CRISTIANO RONALDO",
+    "spawn": "BlackCars_BX6CR7",
+    "photos": [
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_1",
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_2",
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_3",
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_4",
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_5",
+      "COLE_AQUI_O_LINK_DISCORD_FOTO_6"
+    ]
+  },
+  {
+    "name": "BMW X6 PORTUGAL",
+    "spawn": "BlackCars_BX6Portugues",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685127803011308/1.png?ex=6a2c43f3&is=6a2af273&hm=1ce9449cd93c9d93df76ba4e0cafe7d93c8b5c15992a974705eb1407909450da&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685128310259752/2.png?ex=6a2c43f4&is=6a2af274&hm=775099ae4c17b903d313767e0c09e9fe65fc223778d7fa28eca1d847fb74a7f5&=&format=webp&quality=lossless&width=1415&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685128893272237/3.png?ex=6a2c43f4&is=6a2af274&hm=e249ba3967a172ce65175e7aa89ce2f8f6069364c7059f04c886aaf26634f9e5&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685129325412433/4.png?ex=6a2c43f4&is=6a2af274&hm=848aa5982a40304a58906e3ccc5ca99089768444a1ba06137f1ebfdd2f829929&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685129782726687/5.png?ex=6a2c43f4&is=6a2af274&hm=82c403abf94e0f16581c699dcee59de00eb3c139cf1c406e6956f77b33d0ff07&=&format=webp&quality=lossless&width=1343&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685130281582754/6.png?ex=6a2c43f4&is=6a2af274&hm=7058338e3cc8ea13bb0261b43d883a29086edc185a3aea8f0c163a580b021f1b&=&format=webp&quality=lossless"
+    ]
+  },
+  {
+    "name": "HONDA CIVIC TYPER VINICIUS JUNIOR",
+    "spawn": "BlackCars_CTypeRVJR",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685289996619846/1.png?ex=6a2c441a&is=6a2af29a&hm=71845fabb9089360efbf66c0f4c0a8f65ae473344864aaef3f0f7518dd879ef7&=&format=webp&quality=lossless&width=1356&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685290734686260/2.png?ex=6a2c441a&is=6a2af29a&hm=7bffbe885c046d7717c424978d455df8a24a1d790f166bac9496b09086b5a271&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685291301179402/3.png?ex=6a2c441a&is=6a2af29a&hm=860f183f25450a44ce2c59b5b1b7176c8f8e01f83925ba906d6d3f360ae2dc8a&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685291774873760/4.png?ex=6a2c441b&is=6a2af29b&hm=3f97d29f68afa208b6641627b58c090ca979fb34318f82ffd33085cf6ad9f25c&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685292391698502/5.png?ex=6a2c441b&is=6a2af29b&hm=8acec28a010852ffa39a618b564cc326640f0a68a06c28d977b39b62b39d0189&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685292957925608/6.png?ex=6a2c441b&is=6a2af29b&hm=d971cc139602bfe96c8038396af94f30aa6c99f75e11d4a99c679325aa2beb15&=&format=webp&quality=lossless&width=1356&height=856"
+    ]
+  },
+  {
+    "name": "GMC ESCALADE ERLING HAALAND",
+    "spawn": "BlackCars_EscErlingH",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685261345194014/1.png?ex=6a2c4413&is=6a2af293&hm=9bd6a384b55a4776727088f1727cf5efce8c6de50f4e2810e2e66b5155ba7d0d&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685261878132828/2.png?ex=6a2c4413&is=6a2af293&hm=89df65f27afbb2392971b591bb2a2e19c7e7381ab21f48aa6f123067ae7836e8&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685262377259228/3.png?ex=6a2c4414&is=6a2af294&hm=592a503baf5f62c59cbbc625b2b26173b5b5fa6d8397885ae9643116fa46c167&=&format=webp&quality=lossless&width=1272&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685262930903151/4.png?ex=6a2c4414&is=6a2af294&hm=ad636bb01316018371aa1455ab33d3aad8d398067478a8e04c8b2f45b7e456dc&=&format=webp&quality=lossless&width=1405&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685263656386640/5.png?ex=6a2c4414&is=6a2af294&hm=ac2497cc0eb55d9dec2687ecd6072cd0475496254ece38c6de4539c5ef5ac5b9&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685264356839444/6.png?ex=6a2c4414&is=6a2af294&hm=7b701fa538dc1fb5ee4996de9f9e48a387322281fdf7857bebbfabbef3e12b1f&=&format=webp&quality=lossless&width=1198&height=856"
+    ]
+  },
+  {
+    "name": "LAMBORGHINI URUS LIONEL MESSI",
+    "spawn": "BlackCars_LUrusMS10",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685319314804839/1.png?ex=6a2c4421&is=6a2af2a1&hm=509b15043719ce0f547d574b2c8540344e2086cf1c6766f83cf22d221aceb1fb&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685319952466022/2.png?ex=6a2c4421&is=6a2af2a1&hm=122eabd5a7e44e9011ec3fada97cbc7bd9b3a9f5e4f368fbfedef8530bb3da91&=&format=webp&quality=lossless&width=1251&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685320921092238/3.png?ex=6a2c4422&is=6a2af2a2&hm=38b306cff0684bb6ecf7770f72fa439569a9f59a0039352bd00a67976d5bf833&=&format=webp&quality=lossless&width=1405&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685321667678400/4.png?ex=6a2c4422&is=6a2af2a2&hm=fc615a5e089af6a89f64546889b1720bd4578a8f4eab323ea90dffde1fc14e13&=&format=webp&quality=lossless&width=1284&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685322170990712/5.png?ex=6a2c4422&is=6a2af2a2&hm=7a3b5db1f6edc22d9a0e2268a4d37f2f9b8c0cf00a11c7c19e513be0d6664bb1&=&format=webp&quality=lossless&width=1349&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685322766585928/6.png?ex=6a2c4422&is=6a2af2a2&hm=15dd3c7becf1f617e8fd329a46104fed5a2ecfd8f90073071df2f0c94273198b&=&format=webp&quality=lossless&width=1345&height=856"
+    ]
+  },
+  {
+    "name": "MERCEDES GLS MEMPHIS DEPAY",
+    "spawn": "BlackCars_MGLSDepay",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685347580219472/1.png?ex=6a2c4428&is=6a2af2a8&hm=0591cfbcc1ff91b3a1a993fafba383657d329daf89b193630b30cf9fe1d1c6b2&=&format=webp&quality=lossless&width=1381&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685348029137038/2.png?ex=6a2c4428&is=6a2af2a8&hm=2680e0ffe6994c8c2c19b7a8d964bad242ad875f3a0fa5bae1165993ca080d2a&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685348427464897/3.png?ex=6a2c4428&is=6a2af2a8&hm=558ed1eaf340bc85c4f95d38c7c6c6779956d3664c6b0bb9434940ed0ffda0d6&=&format=webp&quality=lossless&width=1537&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685348809150484/4.png?ex=6a2c4428&is=6a2af2a8&hm=e19eea142a4dae44181413276598e0478ebe97587729dbb26db239d7eefeb9e1&=&format=webp&quality=lossless&width=1545&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685349224513556/5.png?ex=6a2c4428&is=6a2af2a8&hm=0b629667b231b5d4f8f8e454e67946c3a6c3bf891b3a84048e89748def8b5b5d&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685349631229952/6.png?ex=6a2c4428&is=6a2af2a8&hm=1a0175034fe0a403debb236e23cb3a3f9c212447e8073e0591441aec85354466&=&format=webp&quality=lossless"
+    ]
+  },
+  {
+    "name": "PORSCHE CAYENNE CANADA",
+    "spawn": "BlackCars_PCayeCanada",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685382552190976/1.png?ex=6a2c4430&is=6a2af2b0&hm=83ded2ecf64029d323378b34e506b5806e69203e52972ddf3f83ee2d071db946&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685382938202334/2.png?ex=6a2c4430&is=6a2af2b0&hm=c60df990b2aea6c8dfc21bdc356ad82a8f7d6717b47de5f71017ba88a78acb5c&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685383424610405/3.png?ex=6a2c4430&is=6a2af2b0&hm=fcf68950e28505b72042d30e41bc406882a956d8ccb7799f8b41c178051274fa&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685383823065098/4.png?ex=6a2c4430&is=6a2af2b0&hm=fd3b75fb25f0f25bb78dcdbc60968f3b595d8ea98ccc2a330eaa1dc83aa21db9&=&format=webp&quality=lossless&width=1480&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685384305545327/5.png?ex=6a2c4431&is=6a2af2b1&hm=b5193a931e8e9e9f263a99b244741fbe95fccab56b1ec2dcce0c4b6ec4ab6e8a&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685390714310878/6.png?ex=6a2c4432&is=6a2af2b2&hm=8b8db88b83576ff34027021dcf0d91c79664d711cbd0b0d511747ae055fa906a&=&format=webp&quality=lossless"
+    ]
+  },
+  {
+    "name": "FERRARI PUROSANGUE NEYMAR JUNIOR",
+    "spawn": "BlackCars_PuroNJR10",
+    "photos": [
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685227115610132/1.png?ex=6a2c440b&is=6a2af28b&hm=5e613773749885db67c01c4cb3af05df07096d86a0f79ab38704019b0f3adc12&=&format=webp&quality=lossless&width=1305&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685227480387594/2.png?ex=6a2c440b&is=6a2af28b&hm=bf558e9c3a20365c15a5f4361ce0c1f921ba8dc2153c61df40e041de0cf7b3f8&=&format=webp&quality=lossless&width=1426&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685227849482392/3.png?ex=6a2c440b&is=6a2af28b&hm=c256f10e90719fd5e8e20f4136b174bf902a83016ded08d6740d7e45f5cdf183&=&format=webp&quality=lossless&width=1425&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685228424233141/4.png?ex=6a2c440b&is=6a2af28b&hm=c4f69ec9b183fe82eae8af389ee674b04d766e7afc187f18863d48703a46e711&=&format=webp&quality=lossless",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685228872896593/5.png?ex=6a2c440c&is=6a2af28c&hm=e0a98d49e00b744ef5e1dad95a4fde06b5f86b1ca179f0f9d46508903ba255c6&=&format=webp&quality=lossless&width=1390&height=856",
+      "https://media.discordapp.net/attachments/1514684970671673445/1514685229258768545/6.png?ex=6a2c440c&is=6a2af28c&hm=382d544e469f2b7a681914100b9ee3cccefcc55143cb8ec2a0d359c02135724c&=&format=webp&quality=lossless"
+    ]
+  }
+];
+
+    const grid = document.getElementById('carsGrid');
+    const counter = document.getElementById('counter');
+    const searchInput = document.getElementById('searchInput');
+
+    function isRealImageLink(url) {
+      return url && !url.includes('COLE_AQUI') && /^https?:\/\//i.test(url.trim());
+    }
+
+    function renderCars(list) {
+      grid.innerHTML = list.map((car, index) => `
+        <article class="card">
+          <div class="card-head">
+            <div class="tag">◆ Veículo #${String(index + 1).padStart(2, '0')}</div>
+            <h2 class="car-name">${car.name}</h2>
+            <div class="spawn-row">
+              <div>
+                <div style="color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px;">Spawn</div>
+                <div class="spawn-code">${car.spawn}</div>
+              </div>
+              <button class="copy-btn" onclick="copySpawn('${car.spawn}', this)">Copiar</button>
+            </div>
+          </div>
+          <div class="photos">
+            ${car.photos.map((photo, i) => isRealImageLink(photo) ?
+              `<a class="photo-link" href="${photo}" target="_blank" rel="noopener"><img src="${photo}" alt="${car.name} - Foto ${i + 1}" onerror="this.parentElement.classList.add('empty-photo'); this.remove();" /></a>` :
+              `<div class="photo-link empty-photo">Foto ${i + 1}<br><small>Cole o link no HTML</small></div>`
+            ).join('')}
+          </div>
+        </article>
+      `).join('');
+      counter.textContent = `${list.length} veículo${list.length === 1 ? '' : 's'}`;
+    }
+
+    function copySpawn(spawn, btn) {
+      navigator.clipboard.writeText(spawn).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copiado!';
+        btn.style.background = 'linear-gradient(135deg, var(--success), #117a55)';
+        setTimeout(() => { btn.textContent = old; btn.style.background = ''; }, 1100);
+      });
+    }
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase().trim();
+      renderCars(cars.filter(car =>
+        car.name.toLowerCase().includes(q) || car.spawn.toLowerCase().includes(q)
+      ));
+    });
+
+    renderCars(cars);
+  </script>
+</body>
+</html>
